@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>یاسین سموسہ شاپ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&family=Fraunces:opsz,wght@9..144,400..900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  :root{
+    --paper: #EDE0C8;
+    --paper-dark: #E2D2AE;
+    --crust: #C9891F;
+    --crust-dark: #9A6414;
+    --chutney: #7A2A2A;
+    --mint: #536B3C;
+    --ink: #2B1B12;
+    --ink-soft: #5A4638;
+    --cream-line: rgba(43,27,18,0.15);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body{
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(201,137,31,0.10), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(122,42,42,0.08), transparent 45%);
+    color: var(--ink);
+    font-family: 'Noto Nastaliq Urdu', 'Poppins', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .latin{
+    font-family: 'Poppins', sans-serif;
+    direction: ltr;
+    display: inline-block;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    padding: 48px 20px 30px;
+    text-align: center;
+    position: relative;
+  }
+
+  .steam{
+    position:absolute;
+    top: 8px; left:50%;
+    transform: translateX(-50%);
+    width: 90px; height: 60px;
+    opacity: 0.55;
+    pointer-events:none;
+  }
+  .steam path{
+    stroke: var(--crust-dark);
+    stroke-width: 3;
+    fill:none;
+    stroke-linecap: round;
+    animation: rise 4s ease-in-out infinite;
+  }
+  .steam path:nth-child(2){ animation-delay: 1.1s; }
+  .steam path:nth-child(3){ animation-delay: 2.2s; }
+  @keyframes rise{
+    0%{ opacity:0; transform: translateY(6px) scaleY(0.85); }
+    30%{ opacity:0.9; }
+    100%{ opacity:0; transform: translateY(-20px) scaleY(1.1); }
+  }
+
+  .shop-name{
+    font-family: 'Noto Nastaliq Urdu', serif;
+    font-size: clamp(2.6rem, 7vw, 4.4rem);
+    color: var(--chutney);
+    line-height: 1.5;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.06);
+  }
+
+  .tagline{
+    margin-top: 6px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    direction: ltr;
+    text-transform: uppercase;
+  }
+
+  .divider{
+    width: 120px; height: 3px;
+    background: repeating-linear-gradient(90deg, var(--crust) 0 10px, transparent 10px 16px);
+    margin: 18px auto 0;
+  }
+
+  /* ---------- TIME TOGGLE (signature element) ---------- */
+  .toggle-wrap{
+    display:flex;
+    justify-content:center;
+    margin: 34px auto 10px;
+  }
+
+  .toggle{
+    position: relative;
+    display:flex;
+    background: var(--ink);
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.35), 0 6px 14px rgba(0,0,0,0.15);
+    gap: 4px;
+  }
+
+  .toggle button{
+    position:relative;
+    z-index: 2;
+    border:none;
+    background: transparent;
+    color: #E8DBC3;
+    font-family: 'Noto Nastaliq Urdu', serif;
+    font-size: 1.15rem;
+    padding: 12px 30px;
+    border-radius: 999px;
+    cursor:pointer;
+    transition: color 0.35s ease;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .toggle button .icon{ font-size: 1.1rem; }
+
+  .toggle button.active{ color: var(--ink); }
+
+  .slider{
+    position:absolute;
+    top:6px; bottom:6px;
+    right:6px;
+    width: calc(50% - 6px);
+    background: linear-gradient(180deg, #F4C862, var(--crust));
+    border-radius: 999px;
+    transition: right 0.4s cubic-bezier(.65,0,.35,1), left 0.4s cubic-bezier(.65,0,.35,1);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  }
+  .toggle.sham .slider{ right: auto; left: 6px; }
+
+  .time-caption{
+    text-align:center;
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    direction: ltr;
+    letter-spacing: 0.08em;
+    margin-bottom: 30px;
+  }
+
+  /* ---------- MENU (receipt card) ---------- */
+  .stage{
+    max-width: 640px;
+    margin: 0 auto 60px;
+    padding: 0 20px;
+    perspective: 1200px;
+  }
+
+  .menu-card{
+    position: relative;
+    background: #F7EFDD;
+    border-radius: 4px;
+    box-shadow: 0 18px 40px rgba(43,27,18,0.18), 0 2px 0 rgba(0,0,0,0.04);
+    padding: 40px 34px 34px;
+    transition: transform 0.55s cubic-bezier(.65,0,.35,1), opacity 0.4s ease;
+  }
+
+  .menu-card::before, .menu-card::after{
+    content:"";
+    position:absolute; left:0; right:0; height: 14px;
+    background:
+      linear-gradient(135deg, transparent 50%, #F7EFDD 50%) 0 0 / 16px 16px repeat-x;
+  }
+  .menu-card::before{ top:-13px; transform: scaleY(-1); }
+  .menu-card::after{ bottom:-13px; }
+
+  .menu-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    border-bottom: 2px dashed var(--cream-line);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+
+  .menu-head h2{
+    font-family:'Noto Nastaliq Urdu', serif;
+    font-size: 2rem;
+    color: var(--chutney);
+  }
+
+  .menu-head .stamp{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.75rem;
+    color: var(--mint);
+    border: 1.5px solid var(--mint);
+    border-radius: 50%;
+    width: 62px; height: 62px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    transform: rotate(-12deg);
+    direction: ltr;
+    line-height: 1.1;
+    opacity: 0.85;
+  }
+
+  .item-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--cream-line);
+    gap: 16px;
+  }
+  .item-row:last-child{ border-bottom:none; }
+
+  .item-info{ display:flex; flex-direction:column; gap: 3px; }
+
+  .item-name{
+    font-family:'Noto Nastaliq Urdu', serif;
+    font-size: 1.35rem;
+    color: var(--ink);
+  }
+
+  .item-note{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    direction: ltr;
+  }
+
+  .item-price{
+    font-family:'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--crust-dark);
+    white-space: nowrap;
+    direction: ltr;
+  }
+
+  .item-price sup{
+    font-size: 0.6em;
+    font-weight: 500;
+    margin-right: 3px;
+    direction: rtl;
+  }
+
+  .menu-foot{
+    margin-top: 22px;
+    text-align:center;
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  .order-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #8AA267, var(--mint));
+    color: #F7EFDD;
+    font-family: 'Noto Nastaliq Urdu', serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(83,107,60,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .order-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 12px 22px rgba(83,107,60,0.42), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .order-btn:active{ transform: translateY(0); }
+  .order-btn .latin{ font-size: 0.95rem; font-weight: 600; letter-spacing: 0.02em; }
+  .order-btn svg{ width: 20px; height: 20px; }
+
+  /* enter/exit animation for switching menus */
+  .menu-card.exit-left{ transform: translateX(-40px) rotateY(8deg); opacity:0; }
+  .menu-card.exit-right{ transform: translateX(40px) rotateY(-8deg); opacity:0; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    text-align:center;
+    padding: 10px 20px 50px;
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  footer .fname{
+    font-family:'Noto Nastaliq Urdu', serif;
+    font-style: normal;
+    font-size: 1.1rem;
+    color: var(--chutney);
+    display:block;
+    margin-bottom: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .steam path{ animation: none; opacity: 0.4; }
+    .menu-card, .slider{ transition: none; }
+  }
+
+  @media (max-width: 420px){
+    .toggle button{ padding: 10px 18px; font-size: 1rem; }
+    .menu-head h2{ font-size: 1.6rem; }
+    .menu-head .stamp{ width: 50px; height:50px; font-size: 0.65rem; }
+  }
+
+  /* ---------- FLOATING WHATSAPP BUTTON ---------- */
+  .wa-float{
+    position: fixed;
+    bottom: 22px;
+    left: 22px;
+    z-index: 200;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: #25D366;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 16px rgba(37,211,102,0.45);
+    text-decoration:none;
+    transition: transform 0.15s ease;
+  }
+  .wa-float:hover{ transform: scale(1.07); }
+  .wa-float svg{ width: 30px; height: 30px; fill: #fff; }
+
+  @media (max-width: 420px){
+    .wa-float{ width: 52px; height: 52px; bottom: 16px; left: 16px; }
+    .wa-float svg{ width: 26px; height: 26px; }
+  }
+
+  /* ---------- ORDER MODAL ---------- */
+  .modal-overlay{
+    position: fixed; inset: 0;
+    background: rgba(43,27,18,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+  }
+  .modal-overlay.open{ opacity: 1; pointer-events: auto; }
+
+  .modal-box{
+    background: #F7EFDD;
+    max-width: 460px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    border-radius: 10px;
+    padding: 32px 28px 26px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+    transform: translateY(24px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(.65,0,.35,1);
+  }
+  .modal-overlay.open .modal-box{ transform: translateY(0) scale(1); }
+
+  .modal-close{
+    position:absolute;
+    top: 14px; left: 14px;
+    background: none; border:none;
+    font-size: 1.4rem;
+    color: var(--ink-soft);
+    cursor:pointer;
+    line-height: 1;
+  }
+
+  .modal-box h3{
+    font-family:'Noto Nastaliq Urdu', serif;
+    font-size: 1.7rem;
+    color: var(--chutney);
+    text-align:center;
+    margin-bottom: 4px;
+  }
+  .modal-sub{
+    text-align:center;
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    direction: ltr;
+    margin-bottom: 20px;
+  }
+
+  .qty-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cream-line);
+    gap: 12px;
+  }
+  .qty-row .qname{
+    font-family:'Noto Nastaliq Urdu', serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  .qty-row .qprice{
+    font-family:'Fraunces', serif;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    direction: ltr;
+  }
+  .qty-stepper{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    direction: ltr;
+  }
+  .qty-stepper button{
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--crust);
+    background: #F1E4C8;
+    color: var(--crust-dark);
+    font-size: 1.1rem;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    line-height: 1;
+  }
+  .qty-stepper span{
+    min-width: 20px;
+    text-align:center;
+    font-family:'Fraunces', serif;
+    font-weight:700;
+  }
+
+  .form-field{
+    margin-top: 16px;
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-field label{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    direction: ltr;
+  }
+  .form-field input, .form-field textarea{
+    border: 1.5px solid var(--cream-line);
+    background: #FBF5E8;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    direction: ltr;
+    resize: vertical;
+  }
+  .form-field input:focus, .form-field textarea:focus{
+    outline: 2px solid var(--crust);
+    outline-offset: 1px;
+  }
+
+  .modal-total{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 2px dashed var(--cream-line);
+    font-family:'Noto Nastaliq Urdu', serif;
+    font-size: 1.2rem;
+    color: var(--chutney);
+  }
+  .modal-total .latin{ font-family:'Fraunces', serif; font-weight: 700; font-size: 1.3rem; }
+
+  .modal-submit{
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border:none;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #F4C862, var(--crust));
+    color: var(--ink);
+    font-family: 'Noto Nastaliq Urdu', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(201,137,31,0.35);
+  }
+  .modal-submit:disabled{ opacity: 0.5; cursor:not-allowed; }
+
+  .modal-error{
+    color: var(--chutney);
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    text-align:center;
+    margin-top: 10px;
+    direction: ltr;
+    display:none;
+  }
+
+  /* success state */
+  .modal-success{
+    text-align:center;
+    padding: 10px 0;
+  }
+  .modal-success .check{
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--mint);
+    color: #F7EFDD;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 2rem;
+    margin: 0 auto 16px;
+  }
+  .modal-success h3{ margin-bottom: 8px; }
+  .modal-success p{
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    direction: ltr;
+    margin-bottom: 18px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="steam" viewBox="0 0 90 60">
+    <path d="M20 55 C 15 40, 25 35, 20 25 C 15 15, 25 10, 20 2"/>
+    <path d="M45 55 C 40 40, 50 35, 45 25 C 40 15, 50 10, 45 2"/>
+    <path d="M70 55 C 65 40, 75 35, 70 25 C 65 15, 75 10, 70 2"/>
+  </svg>
+  <h1 class="shop-name">یاسین سموسہ شاپ</h1>
+  <br>
+  <div class="tagline">Yaseen Samosa Shop &mdash; garam garam, taaza taaza</div>
+  <div class="divider"></div>
+</header>
+
+<div class="toggle-wrap">
+  <div class="toggle" id="toggle">
+    <div class="slider"></div>
+    <button id="btn-subah" class="active"><span class="icon">☀️</span> صبح</button>
+    <button id="btn-sham"><span class="icon">🌙</span> شام</button>
+  </div>
+</div>
+<div class="time-caption" id="time-caption">Morning Menu &mdash; Samosay</div>
+
+<div class="stage">
+  <div class="menu-card" id="menu-card">
+    <!-- content injected by JS -->
+  </div>
+</div>
+
+<footer>
+  <span class="fname">یاسین سموسہ شاپ</span>
+  روزانہ صبح سے شام تک تازہ اور گرما گرم
+  <div class="latin" style="margin-top:6px; font-size:0.8rem;">Open daily &middot; Fresh &amp; hot, every single time</div>
+</footer>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box" id="modal-box">
+    <!-- injected by JS -->
+  </div>
+</div>
+
+<a class="wa-float" href="https://wa.me/923054694055?text=Assalam-o-Alaikum%2C%20mujhe%20order%20karna%20hai" target="_blank" rel="noopener" aria-label="WhatsApp par contact karein">
+  <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.34.653 4.527 1.787 6.394L4 29l7.789-1.752A11.94 11.94 0 0016.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3zm6.964 16.87c-.29.815-1.45 1.5-2.36 1.694-.62.13-1.43.23-4.15-.89-3.48-1.44-5.72-4.94-5.9-5.17-.17-.23-1.42-1.89-1.42-3.6s.87-2.55 1.19-2.9c.31-.34.68-.43.91-.43.23 0 .46.002.66.012.21.01.5-.08.78.6.29.7.99 2.4 1.08 2.58.09.17.15.38.03.61-.12.23-.18.38-.36.58-.18.2-.37.45-.53.6-.18.17-.37.36-.16.7.21.35.94 1.55 2.02 2.51 1.39 1.24 2.56 1.63 2.9 1.82.35.17.55.15.75-.08.21-.24.87-1.02 1.1-1.37.23-.35.46-.29.77-.17.31.11 1.99.94 2.33 1.11.34.17.57.26.65.4.09.15.09.85-.2 1.65z"/></svg>
+</a>
+
+<script>
+  const morning = {
+    title: "صبح کا مینیو",
+    stamp: "FRESH<br>AM",
+    items: [
+      { name: "سموسہ", note: "single piece &middot; crispy &amp; hot", price: "30" },
+      { name: "سموسہ پلیٹ", note: "full plate with chutney", price: "50" }
+    ],
+    foot: "صبح 7 بجے سے دوپہر تک دستیاب"
+  };
+
+  // ===== EmailJS Config — inhein apne EmailJS account se replace karein =====
+  const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+  const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+  const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+  const SHOP_EMAIL = "muhammadahtasham5755@gmail.com";
+  if (window.emailjs) { emailjs.init(EMAILJS_PUBLIC_KEY); }
+  // ===========================================================================
+
+  const evening = {
+    title: "شام کا مینیو",
+    stamp: "PM<br>TANGY",
+    items: [
+      { name: "چنا پاپڑی", note: "per piece &middot; tangy &amp; spicy", price: "10" }
+    ],
+    foot: "شام 5 بجے سے رات تک دستیاب"
+  };
+
+  const card = document.getElementById('menu-card');
+  const toggle = document.getElementById('toggle');
+  const btnSubah = document.getElementById('btn-subah');
+  const btnSham = document.getElementById('btn-sham');
+  const caption = document.getElementById('time-caption');
+
+  function render(data){
+    let rows = data.items.map(it => `
+      <div class="item-row">
+        <div class="item-info">
+          <span class="item-name">${it.name}</span>
+          <span class="item-note latin">${it.note}</span>
+        </div>
+        <div class="item-price latin"><sup>Rs</sup>${it.price}</div>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="menu-head">
+        <h2>${data.title}</h2>
+        <div class="stamp latin">${data.stamp}</div>
+      </div>
+      ${rows}
+      <div class="menu-foot">${data.foot}</div>
+      <button class="order-btn" id="order-btn">
+        <span>آرڈر کریں</span>
+        <span class="latin">Order Now</span>
+      </button>
+    `;
+
+    document.getElementById('order-btn').addEventListener('click', () => openOrderModal(data));
+  }
+
+  const overlay = document.getElementById('modal-overlay');
+  const modalBox = document.getElementById('modal-box');
+
+  function openOrderModal(data){
+    // start every item at quantity 0 (subah wale default 1 for convenience)
+    const qtys = data.items.map(() => 0);
+
+    function total(){
+      return data.items.reduce((sum, it, i) => sum + (Number(it.price) * qtys[i]), 0);
+    }
+
+    function renderForm(){
+      const rows = data.items.map((it, i) => `
+        <div class="qty-row">
+          <div>
+            <div class="qname">${it.name}</div>
+            <div class="qprice latin">Rs ${it.price} / piece-plate</div>
+          </div>
+          <div class="qty-stepper">
+            <button type="button" data-act="dec" data-i="${i}">−</button>
+            <span id="qty-${i}">${qtys[i]}</span>
+            <button type="button" data-act="inc" data-i="${i}">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      modalBox.innerHTML = `
+        <button class="modal-close" id="modal-close">&times;</button>
+        <h3>آرڈر فارم</h3>
+        <div class="modal-sub">Fill in your order — ${data.title === morning.title ? 'Morning' : 'Evening'} Menu</div>
+
+        ${rows}
+
+        <div class="form-field">
+          <label>Aap ka naam / Your Name</label>
+          <input type="text" id="cust-name" placeholder="e.g. Ahmed Khan">
+        </div>
+        <div class="form-field">
+          <label>Phone Number (WhatsApp)</label>
+          <input type="tel" id="cust-phone" placeholder="03XX-XXXXXXX">
+        </div>
+        <div class="form-field">
+          <label>Address / Note (optional)</label>
+          <textarea id="cust-note" rows="2" placeholder="Delivery address ya koi khaas hidayat"></textarea>
+        </div>
+
+        <div class="modal-total">
+          <span>کل رقم</span>
+          <span class="latin" id="modal-total-amt">Rs ${total()}</span>
+        </div>
+
+        <div class="modal-error" id="modal-error">Kam az kam 1 item select karein aur naam/number likhein.</div>
+
+        <button class="modal-submit" id="modal-submit">آرڈر جمع کروائیں <span class="latin">— Submit Order</span></button>
+      `;
+
+      modalBox.querySelectorAll('[data-act]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = Number(btn.dataset.i);
+          if(btn.dataset.act === 'inc') qtys[i]++;
+          else qtys[i] = Math.max(0, qtys[i] - 1);
+          document.getElementById(`qty-${i}`).textContent = qtys[i];
+          document.getElementById('modal-total-amt').textContent = `Rs ${total()}`;
+        });
+      });
+
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      document.getElementById('modal-submit').addEventListener('click', () => submitOrder(data, qtys));
+    }
+
+    renderForm();
+    overlay.classList.add('open');
+  }
+
+  function submitOrder(data, qtys){
+    const name = document.getElementById('cust-name').value.trim();
+    const phone = document.getElementById('cust-phone').value.trim();
+    const note = document.getElementById('cust-note').value.trim();
+    const anyItem = qtys.some(q => q > 0);
+    const errorBox = document.getElementById('modal-error');
+
+    if(!anyItem || !name || !phone){
+      errorBox.style.display = 'block';
+      return;
+    }
+    errorBox.style.display = 'none';
+
+    const orderedLines = data.items
+      .map((it, i) => qtys[i] > 0 ? `${it.name} x${qtys[i]} — Rs ${Number(it.price) * qtys[i]}` : null)
+      .filter(Boolean);
+
+    const total = data.items.reduce((sum, it, i) => sum + (Number(it.price) * qtys[i]), 0);
+    const orderId = 'YS' + Math.floor(1000 + Math.random() * 9000);
+
+    const submitBtn = document.getElementById('modal-submit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Bhej rahe hain...';
+
+    const templateParams = {
+      order_id: orderId,
+      items: orderedLines.join('\n'),
+      total: total,
+      customer_name: name,
+      customer_phone: phone,
+      note: note || '-',
+      to_email: SHOP_EMAIL
+    };
+
+    const showSuccess = () => {
+      modalBox.innerHTML = `
+        <div class="modal-success">
+          <div class="check">&#10003;</div>
+          <h3>آرڈر بھیج دیا گیا</h3>
+          <p>
+            Order sent for <strong>${name}</strong>.<br>
+            ${orderedLines.join('<br>')}<br>
+            Total: Rs ${total}<br>
+            Order WhatsApp par bhej diya gaya hai.
+          </p>
+          <button class="modal-submit" id="modal-close-2">Band karein / Close</button>
+        </div>
+      `;
+      document.getElementById('modal-close-2').addEventListener('click', closeModal);
+    };
+
+    const sendToWhatsApp = () => {
+      const shopWhatsApp = "923054694055";
+      const waMessage = `Assalam-o-Alaikum,\n\n${orderedLines.join('\n')}\n\nTotal: Rs ${total}\nNaam: ${name}\nPhone: ${phone}\nNote: ${note || '-'}`;
+      window.open(`https://wa.me/${shopWhatsApp}?text=${encodeURIComponent(waMessage)}`, '_blank');
+    };
+
+    sendToWhatsApp();
+
+    const isConfigured = EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY" && EMAILJS_SERVICE_ID !== "YOUR_SERVICE_ID" && EMAILJS_TEMPLATE_ID !== "YOUR_TEMPLATE_ID";
+
+    if (window.emailjs && isConfigured) {
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+        .then(showSuccess)
+        .catch(showSuccess);
+    } else {
+      showSuccess();
+    }
+  }
+
+  function closeModal(){
+    overlay.classList.remove('open');
+  }
+
+  overlay.addEventListener('click', (e) => {
+    if(e.target === overlay) closeModal();
+  });
+
+  function switchTo(which){
+    const exitClass = which === 'sham' ? 'exit-left' : 'exit-right';
+    card.classList.add(exitClass);
+    setTimeout(() => {
+      render(which === 'sham' ? evening : morning);
+      card.classList.remove(exitClass);
+    }, 220);
+
+    toggle.classList.toggle('sham', which === 'sham');
+    btnSubah.classList.toggle('active', which !== 'sham');
+    btnSham.classList.toggle('active', which === 'sham');
+    caption.textContent = which === 'sham' ? 'Evening Menu — Chana Papdi' : 'Morning Menu — Samosay';
+  }
+
+  btnSubah.addEventListener('click', () => switchTo('subah'));
+  btnSham.addEventListener('click', () => switchTo('sham'));
+
+  // always start with the morning menu
+  render(morning);
+</script>
+
+</body>
+</html>
